@@ -13,7 +13,16 @@
 
 ARG BUILD_IMAGE
 
+# hadolint ignore=DL3006
 FROM ${BUILD_IMAGE}
 
-RUN opam depext --update --yes $(opam list --all --short | grep -v ocaml-option-)
-RUN opam install --yes $(opam list --all --short | grep -v ocaml-option-)
+# use alpine /bin/ash and set pipefail.
+# see https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run
+SHELL ["/bin/ash", "-o", "pipefail", "-c"]
+
+USER tezos
+WORKDIR /home/tezos
+
+# hadolint ignore=SC2046
+RUN opam depext --update --yes $(opam list --all --short | grep -v ocaml-option-) && \
+    opam install --yes $(opam list --all --short | grep -v ocaml-option-)

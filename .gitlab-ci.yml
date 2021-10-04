@@ -1,7 +1,12 @@
 stages:
+  - lint
   - build
   - publish
 
+# the build template is used by all build jobs
+# The use the variable IMAGE_ARCH_PREFIX that is then used when merging
+# the docker images in one manifesto
+#
 .build-template: &build-definition
   stage: build
   image: docker:latest
@@ -13,7 +18,7 @@ stages:
   script:
     - . ./scripts/version.sh
     - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
-    - ./scripts/create_docker_image.sh "${CI_REGISTRY_IMAGE}" "${IMAGE_ARCH_PREFIX}${CI_COMMIT_SHA}"
+    - ./scripts/create_docker_image.sh "${CI_REGISTRY_IMAGE}" "${IMAGE_ARCH_PREFIX}${CI_COMMIT_SHA}" "${ARCH}"
     # push
     - docker push "${CI_REGISTRY_IMAGE}:runtime-dependencies--${IMAGE_ARCH_PREFIX}${CI_COMMIT_SHA}"
     - docker push "${CI_REGISTRY_IMAGE}:runtime-prebuild-dependencies--${IMAGE_ARCH_PREFIX}${CI_COMMIT_SHA}"
@@ -27,30 +32,57 @@ stages:
         docker push "${CI_REGISTRY_IMAGE}:${IMAGE_ARCH_PREFIX}${TAG_NAME}" ;
       fi
 
+# this step checks that all docker spec files using the tool hadolint
+docker-hadolint:
+  image: hadolint/hadolint:latest-debian
+  stage: lint
+  script:
+    - hadolint runtime-dependencies.Dockerfile
+    - hadolint runtime-prebuild-dependencies.Dockerfile
+    - hadolint runtime-build-dependencies.Dockerfile
+    - hadolint runtime-build-test-dependencies.Dockerfile
+
+# this job builds the build docker images for amd64
+# but the job is restricted to nomadic labs and safe_docker
+# it is used for development
 build-safe:
   <<: *build-definition
+  variables:
+    ARCH: "x86_64" # variable used to build static packages
+    IMAGE_ARCH_PREFIX: "amd64--"
   only:
     - //@tezos/opam-repository
     - //@nomadic-labs/opam-repository
   tags:
     - safe_docker
 
+# this job builds the build docker images for arm64
+# but the job is restricted to nomadic labs and arm64
+# it is used for development
 build-arm64:
   <<: *build-definition
   variables:
     DOCKER_DRIVER: overlay2
+    ARCH: "aarch64" # variable used to build static packages
     IMAGE_ARCH_PREFIX: "arm64--"
   only:
-    - /-release$/@tezos/opam-repository
-    - master@tezos/opam-repository
+    - //@tezos/opam-repository
+    - //@nomadic-labs/opam-repository
   tags:
     - arm64
 
+# The job is triggered both when merging, and when developing
+# on Nomadic Labs' repository.
+# (Forks don't have the capacity to build arm64 images
+# and thus they don't have the capacity to merge the manifest either.)
 merge-manifest:
   stage: publish
   image: docker:latest
   variables:
     DOCKER_DRIVER: overlay2
+  needs:
+    - build-safe
+    - build-arm64
   services:
     - name: "docker:dind"
       command: ["--experimental"]
@@ -62,27 +94,32 @@ merge-manifest:
     - . ./scripts/version.sh
     - docker login -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}" "${CI_REGISTRY}"
     - docker manifest create "${CI_REGISTRY_IMAGE}:runtime-dependencies--${CI_COMMIT_SHA}"
-      --amend "${CI_REGISTRY_IMAGE}:runtime-dependencies--${CI_COMMIT_SHA}"
+      --amend "${CI_REGISTRY_IMAGE}:runtime-dependencies--amd64--${CI_COMMIT_SHA}"
       --amend "${CI_REGISTRY_IMAGE}:runtime-dependencies--arm64--${CI_COMMIT_SHA}"
     - docker manifest push "${CI_REGISTRY_IMAGE}:runtime-dependencies--${CI_COMMIT_SHA}"
     - docker manifest create "${CI_REGISTRY_IMAGE}:runtime-prebuild-dependencies--${CI_COMMIT_SHA}"
-      --amend "${CI_REGISTRY_IMAGE}:runtime-prebuild-dependencies--${CI_COMMIT_SHA}"
+      --amend "${CI_REGISTRY_IMAGE}:runtime-prebuild-dependencies--amd64--${CI_COMMIT_SHA}"
       --amend "${CI_REGISTRY_IMAGE}:runtime-prebuild-dependencies--arm64--${CI_COMMIT_SHA}"
     - docker manifest push "${CI_REGISTRY_IMAGE}:runtime-prebuild-dependencies--${CI_COMMIT_SHA}"
     - docker manifest create "${CI_REGISTRY_IMAGE}:runtime-build-dependencies--${CI_COMMIT_SHA}"
-      --amend "${CI_REGISTRY_IMAGE}:runtime-build-dependencies--${CI_COMMIT_SHA}"
+      --amend "${CI_REGISTRY_IMAGE}:runtime-build-dependencies--amd64--${CI_COMMIT_SHA}"
       --amend "${CI_REGISTRY_IMAGE}:runtime-build-dependencies--arm64--${CI_COMMIT_SHA}"
     - docker manifest push "${CI_REGISTRY_IMAGE}:runtime-build-dependencies--${CI_COMMIT_SHA}"
     - docker manifest create "${CI_REGISTRY_IMAGE}:runtime-build-test-dependencies--${CI_COMMIT_SHA}"
-      --amend "${CI_REGISTRY_IMAGE}:runtime-build-test-dependencies--${CI_COMMIT_SHA}"
+      --amend "${CI_REGISTRY_IMAGE}:runtime-build-test-dependencies--amd64--${CI_COMMIT_SHA}"
       --amend "${CI_REGISTRY_IMAGE}:runtime-build-test-dependencies--arm64--${CI_COMMIT_SHA}"
     - docker manifest push "${CI_REGISTRY_IMAGE}:runtime-build-test-dependencies--${CI_COMMIT_SHA}"
   only:
-    - /-release$/@tezos/opam-repository
-    - master@tezos/opam-repository
+    - //@tezos/opam-repository
+    - //@nomadic-labs/opam-repository
 
+# this is a duplicated job to allow fork to build amd64
 build:
   <<: *build-definition
+  variables:
+    ARCH: "x86_64"
+    # this variable is empty as we don't want to merge any manifest
+    IMAGE_ARCH_PREFIX: ""
   except:
     - //@tezos/opam-repository
     - //@nomadic-labs/opam-repository

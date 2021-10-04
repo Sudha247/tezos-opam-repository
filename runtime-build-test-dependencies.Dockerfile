@@ -15,16 +15,22 @@
 
 ARG BUILD_IMAGE
 
+# hadolint ignore=DL3006
 FROM ${BUILD_IMAGE}
 
 ARG PYTHON_VERSION
 
+# use alpine /bin/ash and set pipefail.
+# see https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#run
+SHELL ["/bin/ash", "-o", "pipefail", "-c"]
+
 USER root
+
+# hadolint ignore=DL3018
 RUN apk --no-cache add \
         py3-pip python3 python3-dev coreutils \
-        py3-sphinx py3-sphinx_rtd_theme
-
-RUN if [[ "$(arch)" == "x86_64" ]]; then apk --no-cache add shellcheck; fi
+        py3-sphinx py3-sphinx_rtd_theme && \
+        if [ "$(arch)" = "x86_64" ]; then apk --no-cache add shellcheck; fi
 
 USER tezos
 WORKDIR /home/tezos
@@ -38,7 +44,7 @@ RUN bash nodejs/install-nvm.sh
 # Deactivate rust-crypto build until we update rust
 ENV CRYPTOGRAPHY_DONT_BUILD_RUST=1
 # Install poetry (https://github.com/python-poetry/poetry)
-RUN pip3 install --user poetry==1.0.10
+RUN pip3 --no-cache-dir install --user poetry==1.0.10
 
 # Required to have poetry in the path in the CI
 ENV PATH="/home/tezos/.local/bin:${PATH}"
@@ -52,8 +58,8 @@ COPY pyproject.toml pyproject.toml
 # $(pwd)/.venv/bin/activate and do not require to run `poetry install`
 # It speeds up the Tezos CI and simplifies the .gitlab-ci.yml file
 # by avoiding duplicated poetry setup checks.
-RUN poetry config virtualenvs.in-project true
-RUN poetry install
+RUN poetry config virtualenvs.in-project true && \
+    poetry install
 ### End Python setup
 
 ENTRYPOINT [ "opam", "exec", "--" ]

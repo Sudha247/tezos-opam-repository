@@ -14,8 +14,6 @@ Several dockerfiles are provided to build docker images used in the CI of the re
 
 ## Poetry files
 
-*poetry.lock* and *pyproject.toml* are specific to Python tests used in Tezos.
-They must not be modified independently from the ones provided in the directory
-`tests_python`.
-They are used to build the virtual environment the CI jobs will use. They are
-useful to speed up the jobs.
+*poetry.lock* and *pyproject.toml* are related to the Python tests and scripts used in Tezos. They
+must not be modified independently from the ones provided in the Tezos repo. They are used to build
+the virtual environment the CI jobs will use. They are useful to speed up the jobs.

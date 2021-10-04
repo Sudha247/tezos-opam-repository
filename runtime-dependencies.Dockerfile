@@ -10,6 +10,7 @@
 
 ARG BUILD_IMAGE
 
+# hadolint ignore=DL3006
 FROM ${BUILD_IMAGE}
 
 # Metadata
@@ -19,13 +20,16 @@ LABEL org.label-schema.vendor="Nomadic Labs" \
       org.label-schema.description="Tezos node" \
       org.label-schema.vcs-url=https://gitlab.com/tezos/tezos \
       org.label-schema.docker.schema-version="1.0" \
-      distro_style="apk" \
+      distro.style="apk" \
       distro="alpine" \
-      distro_long="alpine-$alpine_version" \
+      distro.long="alpine-$alpine_version" \
       operatingsystem="linux"
 
 USER root
+
+# hadolint ignore=DL3018
 RUN apk --no-cache add libev gmp sudo hidapi libffi gcc libc-dev
+
 COPY zcash-params /usr/share/zcash-params
 
 RUN adduser -S tezos && \
@@ -34,7 +38,7 @@ RUN adduser -S tezos && \
     chown root:root /etc/sudoers.d/tezos && \
     sed -i.bak 's/^Defaults.*requiretty//g' /etc/sudoers && \
     mkdir -p /var/run/tezos/node /var/run/tezos/client && \
-    sudo chown -R tezos /var/run/tezos
+    chown -R tezos /var/run/tezos
 
 USER tezos
 ENV USER=tezos
