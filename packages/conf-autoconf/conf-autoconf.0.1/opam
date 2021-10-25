@@ -22,7 +22,6 @@ depexts: [
   ["autoconf"] {os-distribution = "alpine"}
   ["autoconf"] {os-distribution = "ol"}
   ["autoconf"] {os-distribution = "rhel"}
-  ["autoconf"] {os-family = "suse"}
 ]
 synopsis: "Virtual package relying on autoconf installation"
 description: """
