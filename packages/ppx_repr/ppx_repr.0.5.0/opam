@@ -12,7 +12,9 @@ depends: [
   "repr" {= version}
   "ppxlib" {>= "0.12.0"}
   "ppx_deriving"
+  "fmt"
   "hex" {with-test}
+  "optint" {>= "0.1.0" & with-test}
   "alcotest" {>= "1.4.0" & with-test}
   "odoc" {with-doc}
 ]
@@ -34,12 +36,12 @@ build: [
   ]
 ]
 dev-repo: "git+https://github.com/mirage/repr.git"
-x-commit-hash: "f79f95e20ea37f052d170c3d36dac9f0e5966039"
+x-commit-hash: "eb53a14928eeaa70e80402380481add5bd7911be"
 url {
   src:
-    "https://github.com/mirage/repr/releases/download/0.4.0/repr-fuzz-0.4.0.tbz"
+    "https://github.com/mirage/repr/releases/download/0.5.0/repr-fuzz-0.5.0.tbz"
   checksum: [
-    "sha256=1791765a495981cc69c0d591ef06831ca158d85192c6631b4838b3ee997dfcce"
-    "sha512=09fac16a9d4df87bf68b275b032407ddd281beadd2881f848fc2e58d5205538b2a9c3ad6743de268ce70838defcc72de49c1f7e3b02ac590f2ff187fcf0abfab"
+    "sha256=2ed0e1dab950eeb551cbecc3bbc5ddb584b3b3e4b4e039ff3abf7bd6d5b238f9"
+    "sha512=bacfef83e5bd2b12a7ccd514ba92525030cdcf85ba1121e9456db7f327c434db599a47667ca9826ab77ed95e0f946347e027bc6c18420c6a8faabf4a491a2a7a"
   ]
 }
