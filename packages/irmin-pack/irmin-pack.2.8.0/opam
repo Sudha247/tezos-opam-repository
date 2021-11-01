@@ -18,7 +18,7 @@ depends: [
   "irmin"        {= version}
   "irmin-layers" {= version}
   "ppx_irmin"    {= version}
-  "index"        {>= "1.4.1"}
+  "index"        {>= "1.4.2"}
   "fmt"
   "logs"
   "lwt"          {>= "5.3.0"}
@@ -35,10 +35,10 @@ depends: [
 synopsis: "Irmin backend which stores values in a pack file"
 url {
   src:
-    "https://github.com/mirage/irmin/releases/download/2.7.2/irmin-2.7.2.tbz"
+    "https://github.com/mirage/irmin/releases/download/2.8.0/irmin-2.8.0.tbz"
   checksum: [
-    "sha256=29c68c5001a727aaa7a6842d6204ffa3e24b3544fa4f6af2234cdbfa032f7fdf"
-    "sha512=87254dfe640619b678a95c211435c0deaaaac8bec50bba711757dd610c9fe6d9a80938399b7e2bb7bc813116eebc82bf3474b281d1afcd1031586f3d51579925"
+    "sha256=652aa550ba01cb174310f8d46f3c484619e216b2f954e1f478c144cf42804b57"
+    "sha512=d1a25bd025530a5d5b6ad86e9b41146d8c406da81998740df984d9b45047917a8d1a5330eb0b195ee5a2d25769a62bfde5b8c4389f9296ac25333791272e22de"
   ]
 }
-x-commit-hash: "c8d715bdbab8cadaf1665fdd77e0e7e8bf4d16b1"
+x-commit-hash: "e95b0fc693fbabad4be52a398e120d645c8e8f94"

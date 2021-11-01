@@ -24,5 +24,4 @@ USER tezos
 WORKDIR /home/tezos
 
 # hadolint ignore=SC2046
-RUN opam depext --update --yes $(opam list --all --short | grep -v ocaml-option-) && \
-    opam install --yes $(opam list --all --short | grep -v ocaml-option-)
+RUN opam install --yes $(opam list --all --short | grep -v ocaml-option-)

@@ -22,7 +22,7 @@ depends: [
   "ocaml"   {>= "4.08.0"}
   "dune"    {>= "2.7.0"}
   "optint"  {>= "0.1.0"}
-  "repr"    {>= "0.2.0" & < "0.5.0"}
+  "repr"    {>= "0.5.0"}
   "ppx_repr"
   "fmt"     {>= "0.8.5"}
   "logs"    {>= "0.7.0"}
@@ -49,10 +49,10 @@ Index supports multiple-reader/single-writer access. Concurrent access
 is safely managed using lock files."""
 url {
   src:
-    "https://github.com/mirage/index/releases/download/1.4.1/index-1.4.1.tbz"
+    "https://github.com/mirage/index/releases/download/1.4.2/index-1.4.2.tbz"
   checksum: [
-    "sha256=dde943f595ee9bb7d9b84cde05d0cb4675097e785dbf833521761fd843252206"
-    "sha512=9b4e1e2d684222205a5cb17370acfd90d36026de147d548319b7b411fa0c2c36fce970f3e7604880a38f5a17dfe338efd9e33cd70e51ee3d8cb66b038f2a8a69"
+    "sha256=7dfd0632cbd7f167629ac635f94a510f4dcfa6cce7f1245ebe67ef43e0e1e290"
+    "sha512=51fae46d7bade9b1ffd07254fb7f9c0a8e4bfe72500c8b4e237d1c8d0e20745de96ce131a8432adbfd8629c152ea9b3341d5c1b66a00f27edc28cd17981ba0a4"
   ]
 }
-x-commit-hash: "acdad0d033a81753e0fcf3fe95f915dbc5b1504b"
+x-commit-hash: "ee8a1f2093b67eda6c2b3b328d5fb86de672b408"
