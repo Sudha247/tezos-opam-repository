@@ -16,11 +16,7 @@ build: [
 depends: [
   "ocaml"   {>= "4.08.0"}
   "dune"    {>= "2.7.0"}
-<<<<<<< HEAD:packages/irmin/irmin.2.7.2/opam
-  "repr"    {>= "0.4.0"}
-=======
   "repr"    {>= "0.5.0"}
->>>>>>> 81526450d9a35941769e88517757c046ed0aef61:packages/irmin/irmin.2.8.0/opam
   "fmt"     {>= "0.8.0"}
   "uri"     {>= "1.3.12"}
   "uutf"

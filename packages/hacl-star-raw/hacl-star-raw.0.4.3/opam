@@ -34,18 +34,10 @@ install: [
 dev-repo: "git+https://github.com/project-everest/hacl-star.git"
 url {
   src:
-<<<<<<< HEAD:packages/hacl-star-raw/hacl-star-raw.0.4.1/opam
-    "https://github.com/project-everest/hacl-star/releases/download/ocaml-v0.4.1/hacl-star.0.4.1.tar.gz"
-  checksum: [
-    "md5=bc59d5548ad7ac1d67403ad9f74bf608"
-    "sha256=a8769d99f7534610631d24898380060a30d98a58dcdf0a65b53bf1fd2339731a"
-    "sha512=2962724d9b0dbad0ce74bf8dd41a3efda9453a8cdec3e79c9d27f70d90d2252cbd57bf19128918628cdd4f011715b48abc211211ff3d65bf8f47c65c3fd6cc7c"
-=======
     "https://github.com/project-everest/hacl-star/releases/download/ocaml-v0.4.3/hacl-star.0.4.3.tar.gz"
   checksum: [
     "md5=bb7c369f789ac0ac426336178acfb98c"
     "sha256=f1e25e15ee541866b29d792d291f41f8430a1315e02fa6c6e492783c87f945b2"
     "sha512=bfb2ddf125a345deb361483aedf9d79837e9ee18b0bc31644588f8409a0fe0c50db2fc1e6b20a07e02fb9f393d2fc9968fd9d2aa9f506f4e23ca8b6ed4036870"
->>>>>>> 81526450d9a35941769e88517757c046ed0aef61:packages/hacl-star-raw/hacl-star-raw.0.4.3/opam
   ]
 }

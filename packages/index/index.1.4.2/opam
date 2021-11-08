@@ -22,11 +22,7 @@ depends: [
   "ocaml"   {>= "4.08.0"}
   "dune"    {>= "2.7.0"}
   "optint"  {>= "0.1.0"}
-<<<<<<< HEAD:packages/index/index.1.4.1/opam
-  "repr"    {>= "0.2.0"}
-=======
   "repr"    {>= "0.5.0"}
->>>>>>> 81526450d9a35941769e88517757c046ed0aef61:packages/index/index.1.4.2/opam
   "ppx_repr"
   "fmt"     {>= "0.8.5"}
   "logs"    {>= "0.7.0"}
