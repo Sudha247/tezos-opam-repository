@@ -32,9 +32,7 @@ USER root
 # hadolint ignore=DL3018
 RUN apk --no-cache add \
         build-base bash perl xz m4 git curl tar rsync patch jq \
-        ncurses-dev gmp-dev libev-dev opam \
-        openssl-dev \
-        libffi-dev zlib-dev cargo \
+        ncurses-dev opam openssl-dev cargo \
         hidapi-0.9.0-r2.apk \
         hidapi-dev-0.9.0-r2.apk \
         libusb-1.0.24-r2.apk \
@@ -67,12 +65,15 @@ COPY --chown=tezos:nogroup \
 
 WORKDIR /home/tezos/opam-repository
 
+
+# hadolint ignore=SC2046
 RUN opam init --disable-sandboxing --no-setup --yes \
               --compiler ocaml-base-compiler.${OCAML_VERSION} \
               tezos /home/tezos/opam-repository && \
     opam admin cache && \
     opam update && \
     opam install opam-depext && \
+    opam depext --update --yes $(opam list --all --short | grep -v ocaml-option-) && \
     opam clean
 
 ENTRYPOINT [ "opam", "exec", "--" ]
